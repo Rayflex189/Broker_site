@@ -1,0 +1,237 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verification - BIM</title>
+
+    <!-- Favicon -->
+    <link href="{% static 'img/favicon.ico' %}" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- CSS Libraries -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Nanum Gothic", sans-serif;
+        }
+
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #002855, #ffd700);
+            animation: gradientShift 6s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background: linear-gradient(135deg, #002855, #ffd700); }
+            50% { background: linear-gradient(135deg, #001f3f, #ffcc00); }
+        }
+
+        .loading {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: none;
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 8px solid rgba(0, 0, 0, 0.1);
+            border-top: 8px solid #ffd700;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .verification-container {
+            width: 100%;
+            max-width: 420px;
+            padding: 2rem;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.15);
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 1s ease;
+        }
+
+        .verification-container.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .logo h1 {
+            color: #002855;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 1rem;
+            letter-spacing: 1.5px;
+        }
+
+        .box {
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            background: #f9f9f9;
+            border-left: 4px solid #ffd700;
+            border-radius: 6px;
+            text-align: center;
+        }
+
+        .code-display {
+            width: 100%;
+            padding: 1rem;
+            margin: 1rem 0;
+            background: #002855;
+            color: #ffffff;
+            font-size: 1.25rem;
+            font-weight: bold;
+            text-align: center;
+            border-radius: 6px;
+            box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 0.75rem;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .verify-button {
+            width: 100%;
+            padding: 0.75rem;
+            background: #ffd700;
+            color: #002855;
+            font-size: 1.1rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .verify-button:hover {
+            background: #ffcc00;
+            transform: translateY(-2px);
+        }
+
+        .error, .verified {
+            display: none;
+            text-align: center;
+            font-weight: bold;
+            margin-top: 1rem;
+        }
+
+        .error {
+            color: red;
+            animation: shake 0.3s;
+        }
+
+        .verified {
+            color: green;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+            100% { transform: translateX(0); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+
+    <script>
+        let generatedCode;
+
+        function generateCode() {
+            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            generatedCode = '';
+            for (let i = 0; i < 6; i++) {
+                generatedCode += characters.charAt(Math.floor(Math.random() * characters.length));
+            }
+            document.getElementById('codeDisplay').textContent = generatedCode;
+        }
+
+        function verifyCode() {
+            const inputCode = document.getElementById('inputCode').value;
+            const errorDiv = document.getElementById('error');
+            const verifiedDiv = document.getElementById('verified');
+
+            errorDiv.style.display = 'none';
+            verifiedDiv.style.display = 'none';
+
+            if (inputCode === generatedCode) {
+                verifiedDiv.style.display = 'block';
+                setTimeout(() => {
+                    window.location.href = "{% url 'landing' %}";
+                }, 2000);
+            } else {
+                errorDiv.style.display = 'block';
+            }
+        }
+
+        window.onload = function() {
+            document.querySelector('.loading').style.display = 'block';
+            generateCode();
+            setTimeout(() => {
+                document.querySelector('.loading').style.display = 'none';
+                document.querySelector('.verification-container').classList.add('active');
+            }, 500);
+        };
+    </script>
+</head>
+
+<body>
+    <div class="loading">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <div class="verification-container">
+        <div class="logo">
+            <h1>BIM</h1>
+        </div>
+
+        <div class="box">
+            <p>Verify your identity by entering the code below. This step ensures secure access to Blitz Investment Management.</p>
+        </div>
+
+        <div id="codeDisplay" class="code-display"></div>
+
+        <input type="text" id="inputCode" placeholder="Enter code">
+
+        <div id="error" class="error">Incorrect code. Please try again.</div>
+        <div id="verified" class="verified">Code verified successfully!</div>
+
+        <button onclick="verifyCode()" class="verify-button">Verify</button>
+    </div>
+</body>
+</html>

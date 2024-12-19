@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Invest in {{ option.name }}</title>
+<!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Web Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- CSS Libraries -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+        <!-- jQuery and Popper.js -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<meta name="description" content="Dashboard for managing account and transactions.">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        /* Animations */
+        .fade-in {
+            animation: fadeIn 1s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        /* Custom Styling */
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Arial', sans-serif;
+        }
+        .investment-container {
+            max-width: 700px;
+            margin: 50px auto;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            animation: fadeIn 1.5s ease;
+        }
+        .investment-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .investment-header h1 {
+            font-size: 2rem;
+            color: #343a40;
+        }
+        .investment-header p {
+            color: #6c757d;
+        }
+        .profit-display {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #28a745;
+        }
+        .form-label {
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        .form-control {
+            border-radius: 5px;
+            padding: 10px;
+            transition: box-shadow 0.3s;
+        }
+        .form-control:focus {
+            box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
+        }
+        .btn-invest {
+            background: linear-gradient(90deg, #007bff, #0056b3);
+            color: #fff;
+            border: none;
+            width: 100%;
+            padding: 10px;
+            font-size: 1.2rem;
+            border-radius: 5px;
+            margin-top: 20px;
+            transition: background 0.3s, transform 0.2s;
+        }
+        .btn-invest:hover {
+            background: linear-gradient(90deg, #0056b3, #007bff);
+            transform: translateY(-3px);
+        }
+        .profit-card {
+            background: #e9f7ef;
+            padding: 15px;
+            border-radius: 5px;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+
+:root{
+    --sub-color: #150d5e;
+    --card-color:#cfcfcf;
+    --dual-card-color: #fff;
+    --special-text:rgb(43, 83, 3);
+    --font-family:"Nanum Gothic", sans-serif;
+    --bg-color:rgb(214, 220, 226);
+}
+
+
+        .telegram-icon {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .telegram-icon img {
+            width: 50px;
+            height: 50px;
+        }
+
+
+*{
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+  font-weight: 400;
+  font-style: normal;
+}
+
+body{
+   background-color: var(--bg-color);
+   font-family: var(--font-family);
+}
+
+.dropdown-navbar {
+    position: relative;
+    width: 100%;
+    background: -webkit-linear-gradient(left, #1d3ede, #f1a10e);
+  background: -ms-linear-gradient(left, #1d3ede, #f1a10e);
+  background: -moz-linear-gradient(left, #1d3ede, #f1a10e);
+  background: -o-linear-gradient(left, #1d3ede, #f1a10e);
+    padding: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.menu-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #fff;
+}
+
+.bank-name {
+    font-size: 1.5rem;
+    color: #fff;
+    margin-right: 10px;
+}
+
+.navbar-header {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.navbar-links {
+    display: none;
+    flex-direction: column;
+    background: -webkit-linear-gradient(left, #1d3ede, #f1a10e);
+  background: -ms-linear-gradient(left, #1d3ede, #f1a10e);
+  background: -moz-linear-gradient(left, #1d3ede, #f1a10e);
+  background: -o-linear-gradient(left, #1d3ede, #f1a10e);
+    padding: 10px;
+    position: absolute;
+    width: 100%;
+    top: 100%;
+    left: 0;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    animation: slideDown 0.3s ease-out forwards;
+}
+
+.navbar-links a {
+    text-decoration: none;
+    color: #fff;
+    padding: 10px 0;
+    display: block;
+    text-align: left;
+    transition: background 0.3s;
+}
+.navbar-links a:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+}
+
+.page_info{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    gap: 1rem;
+    background: var(--card-color);
+}
+
+.main_page_info{
+    display: flex;
+    justify-content: space-evenly;
+    align-items: baseline;
+    flex-direction: column;
+}
+
+.dp{
+    width: 7rem;
+    border-radius: 50%;
+}
+
+.account_info_box{
+    margin: 0.5rem;
+    padding: 1rem;
+    border-radius: 1rem;
+    background: var(--dual-card-color);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.details_sect{
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.details_sect, aside{
+      line-height: 2rem;
+}
+
+.deposit_box{
+    padding: 1.4rem;
+    border-radius: 10%;
+    background: rgb(207, 219, 230);
+}
+
+.top, .bottom{
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.box_holder{
+    display: flex;
+    gap:0.5rem;
+    flex-direction: column;
+    align-items: center;
+}
+
+.pon{
+    font-size: 10px;
+    font-weight: bold;
+}
+
+.box{
+    width: 50px; /* Small width */
+    height: 50px; /* Small height */
+    overflow: hidden; /* Hides any overflow */
+    display: flex; /* Use flexbox for centering */
+    justify-content: center; /* Centers horizontally */
+    align-items: center; /* Centers vertically */
+    border-radius: 10%;
+}
+
+.responsive-image {
+    max-width: 100%; /* Ensures the image fits within the container */
+    max-height: 100%; /* Ensures the image fits within the container */
+}
+
+.custom-container {
+    margin-top: 40px; /* Adjust as needed */
+    animation: fadeIn 1s ease-in;
+}
+
+.custom-table-box {
+    background-color: #fff; /* Light blue background */
+    padding: 20px; /* Adjust padding as needed */
+    border-radius: 8px;
+    animation: slideIn 0.8s ease-in-out;
+}
+
+.custom-heading {
+    text-align: center;
+    color: #333; /* Darker text color for contrast */
+    margin-bottom: 20px;
+    animation: fadeInUp 1s ease-in-out;
+}
+
+.custom-table-wrapper {
+    overflow-x: auto; /* Allows horizontal scrolling */
+    -ms-overflow-style: none; /* Hides scrollbar in Internet Explorer and Edge */
+    scrollbar-width: none; /* Hides scrollbar in Firefox */
+}
+
+.custom-table-wrapper::-webkit-scrollbar {
+    display: none;
+}
+
+.custom-table td {
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Table header styling */
+.custom-table thead th {
+    background-color: #007bff; /* Blue background */
+    color: white;
+    padding: 10px;
+    text-align: left;
+}
+
+/* Transaction rows styling */
+.custom-transaction-credit {
+    background-color: #e0ffe0; /* Light green for credits */
+    animation: highlightCredit 1s ease-in;
+}
+
+.custom-transaction-debit {
+    background-color: #ffe0e0; /* Light red for debits */
+    animation: highlightDebit 1s ease-in;
+}
+
+/* Animation definitions */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideIn {
+    from { transform: translateY(-20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes highlightCredit {
+    from { background-color: #e0ffe0; }
+    to { background-color: #d0f0d0; } /* Slightly darker green */
+}
+
+@keyframes highlightDebit {
+    from { background-color: #ffe0e0; }
+    to { background-color: #f0d0d0; } /* Slightly darker red */
+}
+
+.box2345{
+    padding: 1rem;
+    font-family: Sans-Serif;
+     display: flex;
+     gap: 1rem;
+     flex-direction: column;
+}
+
+.bo1{
+    border-radius: 0.5rem;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 5px 5px 5px #000;
+    background-color: white;
+}
+
+.bo1 h4{
+    text-align:left;
+    font-weight:bold;
+}
+
+.bo1:hover{
+        transition: 1s ease;
+        background: -webkit-linear-gradient(left, #1d3ede, #f1a10e);
+  background: -ms-linear-gradient(left, #1d3ede, #f1a10e);
+  background: -moz-linear-gradient(left, #1d3ede, #f1a10e);
+  background: -o-linear-gradient(left, #1d3ede, #f1a10e);
+        color: #fff;
+        }
+
+.bill{
+    color:#000;
+    display:flex;
+    font-family:arial;
+    font-weight:bolder;
+    align-items:center;
+}
+
+                /* Animation for navbar links */
+@keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+.billy{
+    color:#000;
+    display:flex;
+    align-items:center;
+    font-size:1.3rem;
+    font-weight:bold;
+}
+
+.box_holder a {
+    display: flex; /* Make sure the anchor tag takes full space */
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none; /* Remove underline from links */
+    transition: transform 0.2s ease, box-shadow 0.2s ease; /* Smooth transition */
+}
+
+.box_holder a:hover,
+.box_holder a:active {
+    transform: scale(1.05); /* Slightly enlarge the box */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Add shadow on hover */
+}
+
+
+.balance {
+    font-size: 2rem; /* Adjust size as needed */
+    font-weight: bolder; /* Makes the text bold */
+    white-space: nowrap; /* Prevents line breaks */
+}
+
+@keyframes bounceIn {
+    0% {
+        transform: scale(0.5);
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.1);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.bounce-in {
+    animation: bounceIn 0.5s ease forwards;
+}
+small{
+    text-transform: capitalize;
+}
+.info {
+            position: relative;
+            bottom: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            font-size: 1rem;
+            color: aliceblue;
+            background: -webkit-linear-gradient(left, #1d3ede, #f1a10e);
+  background: -ms-linear-gradient(left, #1d3ede, #f1a10e);
+  background: -moz-linear-gradient(left, #1d3ede, #f1a10e);
+  background: -o-linear-gradient(left, #1d3ede, #f1a10e);
+            padding: 10px;
+            border-radius: 10px;
+        }
+
+        .info span {
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .profile-img {
+    width: 5rem;
+    height: 6rem;
+    border: 3px solid #000;
+    border-radius: 20%;
+    position: relative;
+}
+
+.navbar {
+        width: 100%;
+        margin-bottom: 2rem; /* Adds spacing below the navbar */
+    }
+
+    .navbar-brand {
+        font-weight: bold;
+        color: #ffd700 !important; /* Matches the dashboard color theme */
+    }
+
+    .navbar-nav .nav-link {
+        margin-right: 1rem;
+        font-size: 1rem;
+    }
+
+    .navbar-nav .btn {
+        margin-left: 1rem;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .navbar-nav .nav-link {
+            margin-right: 0;
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+    }
+
+    @media (max-width: 768px) {
+    .navbar-nav {
+        text-align: center;
+    }
+
+    .nav-item {
+        margin: 0.5rem 0;
+    }
+
+    .nav-link {
+        font-size: 1rem;
+    }
+}
+    </style>
+</head>
+<body>
+<header>
+       
+
+  <!-- Top Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">Blitz Crypto Investments</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'home' %}">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#portfolio">Portfolio</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#transactions">Transactions</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'setting' %}">Settings</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'investment_options' %}">Investment Options</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link btn btn-warning text-dark" href="{% url 'logout' %}">Logout</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+
+    </header>
+    <div class="container investment-container fade-in">
+        <!-- Header Section -->
+        <div class="investment-header">
+            <h1>Invest in <span class="text-primary">{{ option.name }}</span></h1>
+            <p>Your current balance is: <strong>${{ balance }}</strong></p>
+        </div>
+
+        <!-- Investment Details -->
+        <div class="profit-card">
+            <p class="mb-0">The minimum investment amount is: <strong>${{ option.min_amount }}</strong>.</p>
+            <p>The maximum investment amount is: <strong>${{ option.max_amount }}</strong>.</p>
+        </div>
+<!-- Investment Form -->
+<div class="investment-container">
+    <form method="POST" class="mt-4">
+        {% csrf_token %}
+
+        <!-- Investment Amount Input -->
+        <label for="investment-amount" class="form-label">Investment Amount:</label>
+        <input type="number" 
+               name="amount" 
+               id="investment-amount" 
+               class="form-control" 
+               placeholder="Enter an amount"
+               min="{{ option.min_amount }}" 
+               max="{{ option.max_amount }}" 
+               required>
+
+        <!-- Estimated Profit Display -->
+        <div class="profit-card mt-3">
+            <p class="mb-0">Estimated Profit (2%):</p>
+            <p class="profit-display">$<span id="profit-display">0.00</span></p>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn btn-invest pulse">Invest Now</button>
+    </form>
+</div>
+
+<!-- JavaScript for Dynamic Profit Calculation -->
+<script>
+    // Navbar toggle functionality
+    const menuBtn = document.getElementById('menu-btn');
+    const navbarLinks = document.getElementById('navbar-links');
+
+    if (menuBtn && navbarLinks) {
+        menuBtn.addEventListener('click', () => {
+            navbarLinks.style.display = navbarLinks.style.display === 'flex' ? 'none' : 'flex';
+        });
+    }
+
+    // Profit calculation
+    const amountInput = document.getElementById('investment-amount');
+    const profitDisplay = document.getElementById('profit-display');
+
+    if (amountInput && profitDisplay) {
+        amountInput.addEventListener('input', () => {
+            // Get the investment amount
+            const amount = parseFloat(amountInput.value) || 0;
+
+            // Ensure the input amount is non-negative
+            const validAmount = Math.max(amount, 0);
+
+            // Calculate the profit as 2% of the valid amount
+            const profit = validAmount * 0.02;
+
+            // Update the profit display
+            profitDisplay.textContent = profit.toFixed(2);
+        });
+    }
+</script>
+
+    <!-- Bootstrap JS (optional) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

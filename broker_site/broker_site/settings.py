@@ -122,6 +122,10 @@ import os
 
 STATIC_URL = 'static/'
 
+if not DEBUG:
+    # Use WhiteNoise storage for production
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 MEDIA_URL = '/media/'

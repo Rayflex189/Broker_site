@@ -20,7 +20,7 @@ DATABASES = {
         'NAME': 'blitz_investment_dbs',
         'USER': 'blitz_investment_dbs_user',
         'PASSWORD': 'VYABtJQHeuKd2akPAu6hD7O8zkMa5s4p',
-        'HOST': 'dpg-cv73pjdumphs738eaop0-a.oregon-postgres.render.com',  # Check this
+        'HOST': 'dpg-cvm7lqvdiees73caalu0-a.oregon-postgres.render.com',  # Check this
         'PORT': '5432',
     },
      'OPTIONS': {

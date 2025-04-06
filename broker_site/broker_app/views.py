@@ -93,24 +93,21 @@ def home(request):
     try:
         user_profile = UserProfile.objects.get(user=request.user)
     except UserProfile.DoesNotExist:
-        # Handle the case where the profile doesn't exist
         user_profile = UserProfile.objects.create(user=request.user)
 
-    # Fetch the last 10 transactions
     transactions = Transaction.objects.filter(user=user_profile.user).order_by('-timestamp')[:10]
-    Profit_amounts = Investment.objects.all()  # Fetch all investments
-    main_balance = user_profile.main_balance
+    Profit_amounts = Investment.objects.all()
+    main_balance = user_profile.main_balance or 0.00  # Ensures default 0.00 if None
     options = InvestmentOption.objects.all()
     currency = user_profile.currency
 
-    # Get the third field (assuming "field_name" is the name of the field you want)
-    third_field = None
-    if Profit_amounts.exists() and Profit_amounts[0]._meta.fields:
-        third_field = getattr(Profit_amounts[0], Profit_amounts[0]._meta.fields[4].name, None)
-
-    forth_field = None
-    if Profit_amounts.exists() and Profit_amounts[0]._meta.fields:
-        forth_field = getattr(Profit_amounts[0], Profit_amounts[0]._meta.fields[5].name, None)
+    # Safely extract profit and investment fields
+    third_field = 0.00
+    forth_field = 0.00
+    if Profit_amounts.exists():
+        profit = Profit_amounts[0]
+        third_field = getattr(profit, profit._meta.fields[4].name, 0.00) or 0.00
+        forth_field = getattr(profit, profit._meta.fields[5].name, 0.00) or 0.00
 
     context = {
         'currency': currency,
@@ -120,11 +117,10 @@ def home(request):
         'transactions': transactions,
         'options': options,
         'third_field': third_field,
-        'forth_field':forth_field
-
+        'forth_field': forth_field
     }
     return render(request, 'broker_app/dashboard.html', context)
-
+    
 @login_required
 def setting(request):
     try:

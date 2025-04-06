@@ -4,7 +4,7 @@ from .models import *
 @admin.register(Investment)
 class InvestmentAdmin(admin.ModelAdmin):
     list_display = ['user', 'option', 'amount', 'profit', 'total_amount', 'status']
-    list_editable = ['profit']
+    list_editable = ['profit', 'total_amount', 'amount']
     search_fields = ['user__username', 'option__name']
     list_filter = ['status', 'option']
     ordering = ['-id']

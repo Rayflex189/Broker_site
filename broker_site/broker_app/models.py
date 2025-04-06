@@ -52,7 +52,7 @@ class Investment(models.Model):
             ('pending', 'Pending'),
             ('successful', 'Successful')
         ],
-        default='pending'
+        default='successful'
     )
 
     def calculate_profit(self):
@@ -76,7 +76,7 @@ class Transaction(models.Model):
     balance_after = models.DecimalField(decimal_places=2, max_digits=10)
     timestamp = models.DateTimeField(auto_now_add=True)
     description = models.CharField(max_length=255, blank=True, null=True)
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='completed')
 
     def __str__(self):
         return f"{self.amount} - {self.user.username} - {self.timestamp} - {self.status}"

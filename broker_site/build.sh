@@ -2,11 +2,17 @@
 # Exit on error
 set -o errexit
 
-# Modify this line as needed for your package manager (pip, poetry, etc.)
+# Install dependencies
 pip install -r requirements.txt
 
-# Convert static asset files
-python manage.py collectstatic --no-input
+# Remove previous migration files except __init__.py
+find bank_app/migrations/ -type f ! -name '__init__.py' -delete
 
-# Apply any outstanding database migrations
-python manage.py migrate
+# Make fresh migrations
+python manage.py makemigrations
+
+# Apply migrations with fake initial if tables already exist
+python manage.py migrate --fake-initial
+
+# Collect static files
+python manage.py collectstatic --no-input

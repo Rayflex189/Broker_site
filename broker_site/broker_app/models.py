@@ -35,11 +35,11 @@ class InvestmentOption(models.Model):
     description = models.TextField()
     min_amount = models.DecimalField(max_digits=10, decimal_places=2)
     max_amount = models.DecimalField(max_digits=10, decimal_places=2)
-    image = models.ImageField(upload_to='media/')
+    image = models.ImageField(upload_to='media/', blank=True, null=True)
 
     def __str__(self):
         return f"{self.name} (Min: ${self.min_amount}, Max: ${self.max_amount})"
-
+        
 class Investment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     option = models.ForeignKey(InvestmentOption, on_delete=models.CASCADE)

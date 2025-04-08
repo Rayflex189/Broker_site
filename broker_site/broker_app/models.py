@@ -5,6 +5,8 @@ from django.core.exceptions import ValidationError
 from django.utils import timezone
 from decimal import Decimal
 from datetime import datetime
+from cloudinary.models import CloudinaryField
+
 import random
 import string
 # Create your models here.
@@ -544,7 +546,7 @@ class UserProfile(models.Model):
         ('Female', 'Female'),
     ]
     Gender = models.CharField(max_length=50, choices=gender_choices, blank=True)
-    profile_pic = models.ImageField(default='d_profile.jfif', null=True, blank=True)
+    profile_pic = CloudinaryField('profile_pic', null=True, blank=True)
     main_balance = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     MID_CODE = models.CharField(max_length=11, default=generate_MID_CODE)
     created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)

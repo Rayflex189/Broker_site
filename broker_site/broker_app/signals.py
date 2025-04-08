@@ -1,6 +1,5 @@
-from django.db.models.signals import pre_save, post_save
+from django.db.models.signals import pre_save, post_save, post_migrate
 from django.dispatch import receiver
-from django.db.models.signals import post_migrate
 from django.contrib.auth import get_user_model
 from django.core.mail import send_mail
 from django.conf import settings
@@ -32,60 +31,69 @@ def create_superuser(sender, **kwargs):
 
 @receiver(post_save, sender=Investment)
 def update_investment_totals(sender, instance, created, **kwargs):
+    """
+    Updates total amount and profit for an investment.
+    """
     if created:
         instance.total_amount = instance.amount
         instance.profit = instance.calculate_profit()
-    else:
-        original = sender.objects.get(pk=instance.pk)
-        instance.total_amount = original.total_amount + instance.amount
-        instance.profit = original.profit + instance.calculate_profit()
-
-    instance.save(update_fields=['total_amount', 'profit'])
-
-
-@receiver(post_save, sender=UserProfile)
-def send_balance_update_notification(sender, instance, **kwargs):
-    if not kwargs.get('created', False):
-        old_balance = sender.objects.get(pk=instance.pk).main_balance
-        new_balance = instance.main_balance
-
-        if new_balance != old_balance:
-            transaction_type = "Credit" if new_balance > old_balance else "Debit"
-            difference = abs(new_balance - old_balance)
-
-            subject = "Your Account Balance Has Been Updated"
-            message = (
-                f"Dear {instance.user.first_name},\n\n"
-                f"There has been a {transaction_type} of {difference} in your account.\n"
-                f"Your new balance is {new_balance}.\n\n"
-                f"Thank you for banking with us.\n\n"
-                f"Merchant First Bank"
-            )
-            recipient_email = instance.user.email
-
-            send_mail(
-                subject,
-                message,
-                'skylinebank059@gmail.com',
-                [recipient_email],
-                fail_silently=False,
-            )
+        instance.save(update_fields=['total_amount', 'profit'])
 
 
 @receiver(pre_save, sender=UserProfile)
 def track_balance_changes(sender, instance, **kwargs):
-    if not instance.pk:
-        instance._old_balance = None
-    else:
+    """
+    Tracks previous balance before saving.
+    """
+    if instance.pk:
         try:
             old_instance = UserProfile.objects.get(pk=instance.pk)
             instance._old_balance = old_instance.main_balance
         except UserProfile.DoesNotExist:
             instance._old_balance = None
+    else:
+        instance._old_balance = None
+
+
+@receiver(post_save, sender=UserProfile)
+def send_balance_update_notification(sender, instance, created, **kwargs):
+    """
+    Sends email notification when user balance changes.
+    """
+    if created or instance._old_balance is None:
+        return
+
+    old_balance = instance._old_balance
+    new_balance = instance.main_balance
+
+    if new_balance != old_balance:
+        transaction_type = "Credit" if new_balance > old_balance else "Debit"
+        difference = abs(new_balance - old_balance)
+
+        subject = "Your Account Balance Has Been Updated"
+        message = (
+            f"Dear {instance.user.first_name},\n\n"
+            f"There has been a {transaction_type} of {difference} in your account.\n"
+            f"Your new balance is {new_balance}.\n\n"
+            f"Thank you for banking with us.\n\n"
+            f"Merchant First Bank"
+        )
+        recipient_email = instance.user.email
+
+        send_mail(
+            subject,
+            message,
+            'skylinebank059@gmail.com',
+            [recipient_email],
+            fail_silently=False,
+        )
 
 
 @receiver(post_save, sender=UserProfile)
 def create_transaction_on_balance_update(sender, instance, created, **kwargs):
+    """
+    Creates a transaction record if balance has changed.
+    """
     if created or instance._old_balance is None:
         return
 

@@ -69,6 +69,16 @@ INSTALLED_APPS = [
     'broker_app',
 ]
 
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': 'dlzn0moho',
+    'API_KEY': '942887989436842',
+    'API_SECRET': '8_Hu2A6oefhgbHWGdA0cEehYerc',
+}
+
+MEDIA_URL = '/media/'  # or any prefix you choose
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',

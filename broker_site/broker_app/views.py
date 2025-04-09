@@ -102,13 +102,8 @@ def home(request):
     currency = user_profile.currency
 
     # Safely extract profit and investment fields
-    third_field = 0.00
-    forth_field = 0.00
-    if Profit_amounts.exists():
-        profit = Profit_amounts[0]
-        third_field = getattr(profit, profit._meta.fields[4].name, 0.00) or 0.00
-        forth_field = getattr(profit, profit._meta.fields[5].name, 0.00) or 0.00
-
+    third_field = user_profile.profit
+    forth_field = user_profile.total_balance
     context = {
         'currency': currency,
         'Profit_amounts': Profit_amounts,

@@ -565,7 +565,7 @@ class UserProfile(models.Model):
 
     def clean(self):
         super().clean()
-        if self.two_factor_auth == 'enable':
+        if self.four_digit_auth_key == 'enable':
             if not self.four_digit_auth_key or len(str(self.four_digit_auth_key)) != 4:
                 raise ValidationError({'four_digit_auth_key': 'A 4-digit authentication key is required when two-factor authentication is enabled.'})
         else:

@@ -102,8 +102,8 @@ def home(request):
     currency = user_profile.currency
 
     # Safely extract profit and investment fields
-    third_field = user_profile.profit
-    forth_field = user_profile.total_balance
+    profit = user_profile.profit
+    total_balance = user_profile.total_balance
     context = {
         'currency': currency,
         'Profit_amounts': Profit_amounts,
@@ -111,8 +111,8 @@ def home(request):
         'user_profile': user_profile,
         'transactions': transactions,
         'options': options,
-        'third_field': third_field,
-        'forth_field': forth_field
+        'total_balance': total_balance,
+        'profit': profit
     }
     return render(request, 'broker_app/dashboard.html', context)
     

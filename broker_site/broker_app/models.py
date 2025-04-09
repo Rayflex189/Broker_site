@@ -558,16 +558,16 @@ class UserProfile(models.Model):
     def total_balance(self):
         return self.profit + self.total_amount 
 
-   def save(self, *args, **kwargs):
-    self.total_balance = self.profit + self.total_amount
-    super().save(*args, **kwargs)
+    def save(self, *args, **kwargs):
+        self.total_balance = self.profit + self.total_amount
+          super().save(*args, **kwargs)
 
-    def clean(self):
-        super().clean()
+     def clean(self):
+         super().clean()
         if self.two_factor_auth == 'enable':
             if not self.four_digit_auth_key or len(self.four_digit_auth_key) != 4:
                 raise ValidationError({'four_digit_auth_key': 'A 4-digit authentication key is required when two-factor authentication is enabled.'})
-        else:
+         else:
             # Clear the key if two-factor auth is disabled
             self.four_digit_auth_key = None
 

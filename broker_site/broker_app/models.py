@@ -551,31 +551,29 @@ class UserProfile(models.Model):
     MID_CODE = models.CharField(max_length=11, default=generate_MID_CODE)
     created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     is_verified = models.BooleanField(default=False)
-    profit = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)  # Field to store cumulative profit
+    profit = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     total_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
 
     @property
     def total_balance(self):
-        return self.profit + self.total_amount 
+        return self.profit + self.total_amount
 
     def save(self, *args, **kwargs):
-        self.total_balance = self.profit + self.total_amount
-          super().save(*args, **kwargs)
-
-     def clean(self):
-         super().clean()
-        if self.two_factor_auth == 'enable':
-            if not self.four_digit_auth_key or len(self.four_digit_auth_key) != 4:
-                raise ValidationError({'four_digit_auth_key': 'A 4-digit authentication key is required when two-factor authentication is enabled.'})
-         else:
-            # Clear the key if two-factor auth is disabled
-            self.four_digit_auth_key = None
+        # Optional: update the DB field only if you have total_balance as a model field
+        # self.total_balance = self.profit + self.total_amount
+        super().save(*args, **kwargs)
 
     def clean(self):
-        # Ensure four_digit_auth_key is a 4-digit integer
-        if not self.four_digit_auth_key or not (1000 <= self.four_digit_auth_key <= 9999):
-            raise ValidationError("The authentication key must be a 4-digit number.")
+        super().clean()
+        if self.two_factor_auth == 'enable':
+            if not self.four_digit_auth_key or len(str(self.four_digit_auth_key)) != 4:
+                raise ValidationError({'four_digit_auth_key': 'A 4-digit authentication key is required when two-factor authentication is enabled.'})
+        else:
+            self.four_digit_auth_key = None
 
+        # Ensure four_digit_auth_key is a 4-digit integer if it exists
+        if self.four_digit_auth_key and not (1000 <= int(self.four_digit_auth_key) <= 9999):
+            raise ValidationError("The authentication key must be a 4-digit number.")
 
     def __str__(self):
         return self.user.username

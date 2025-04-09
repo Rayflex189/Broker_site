@@ -15,9 +15,9 @@ admin.site.register(InvestmentOption)
 
 @admin.register(UserProfile)
 class UserProfileAdmin(admin.ModelAdmin):
-    list_display = ['user', 'MID_CODE', 'main_balance', 'card_number', 'cvv', 'expiry_date','profit', 'total_amount',]  # Include balance in the admin list
+    list_display = ['user', 'MID_CODE', 'main_balance', 'card_number', 'cvv', 'expiry_date','profit', 'total_balance',]  # Include balance in the admin list
     search_fields = ['user__username']
-    list_editable = ['profit', 'total_amount',]
+    list_editable = ['profit', 'total_balance',]
      # Search by username
 
     def save_model(self, request, obj, form, change):

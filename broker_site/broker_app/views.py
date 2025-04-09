@@ -103,7 +103,7 @@ def home(request):
 
     # Safely extract profit and investment fields
     profit = user_profile.profit
-    total_balance = user_profile.total_balance
+    total_balance = user_profile.total_amount
     context = {
         'currency': currency,
         'Profit_amounts': Profit_amounts,

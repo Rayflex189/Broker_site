@@ -544,11 +544,11 @@ window.onload = function() {
             </div>
             <div class="balance-box">
                 <h3>Total Investment</h3>
-                <p>{{user_profile.currency}}{{forth_field|intcomma}}</p>
+                <p>{{user_profile.currency}}{{user_profile.total_amount|intcomma}}</p>
             </div>
             <div class="balance-box">
                 <h3>Profit Balance</h3>
-                <p>{{user_profile.currency}}{{ third_field|intcomma }}</p>
+                <p>{{user_profile.currency}}{{ {user_profile.profit|intcomma }}</p>
             </div>
         </div>
 

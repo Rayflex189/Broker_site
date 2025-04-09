@@ -9,38 +9,36 @@ class InvestmentAdmin(admin.ModelAdmin):
     list_filter = ['status', 'option']
     ordering = ['-id']
 
-
 admin.site.register(InvestmentOption)
-
 
 @admin.register(UserProfile)
 class UserProfileAdmin(admin.ModelAdmin):
-    list_display = ['user', 'MID_CODE', 'main_balance', 'card_number', 'cvv', 'expiry_date','profit', 'total_amount','get_total_balance']
+    list_display = [
+        'user', 'MID_CODE', 'main_balance', 'card_number', 'cvv',
+        'expiry_date', 'profit', 'total_amount', 'get_total_balance'
+    ]
     search_fields = ['user__username']
-    list_editable = ['profit', 'total_amount',]
-    get_total_balance.short_description = 'Total Balance'  # Include balance in the admin list
-    
-     # Search by username
+    list_editable = ['profit', 'total_amount']
+
     def get_total_balance(self, obj):
         return obj.total_balance
+    get_total_balance.short_description = 'Total Balance'  # This must be set after method definition
 
     def save_model(self, request, obj, form, change):
-        if change:  # Check if the model instance is being updated, not created
+        if change:
             try:
                 old_instance = UserProfile.objects.get(pk=obj.pk)
                 if old_instance.main_balance != obj.main_balance:
                     amount = obj.main_balance - old_instance.main_balance
                     description = 'Credit' if amount > 0 else 'Debit'
-                    
-                    # Print statements for debugging
+
                     print(f"Admin updated balance for user: {obj.user.username}")
                     print(f"Old balance: {old_instance.main_balance}, New balance: {obj.main_balance}")
                     print(f"Transaction type: {description}, Amount: {abs(amount)}")
 
-                    # Create a transaction record
                     Transaction.objects.create(
                         user=obj.user,
-                        amount=abs(amount),  # Use absolute value for amount
+                        amount=abs(amount),
                         balance_after=obj.main_balance,
                         description=description
                     )
@@ -50,9 +48,11 @@ class UserProfileAdmin(admin.ModelAdmin):
 
 @admin.register(Transaction)
 class TransactionAdmin(admin.ModelAdmin):
-    list_display = ['user', 'amount', 'balance_after', 'timestamp', 'description', 'status']  # Add 'status' to the displayed fields
-    search_fields = ['user__username', 'description', 'status']  # Add 'status' to the searchable fields
-    list_filter = ['timestamp', 'user', 'status']  # Add 'status' to the filters
+    list_display = [
+        'user', 'amount', 'balance_after', 'timestamp', 'description', 'status'
+    ]
+    search_fields = ['user__username', 'description', 'status']
+    list_filter = ['timestamp', 'user', 'status']
     ordering = ['-timestamp']
 
 class YourModelAdmin(admin.ModelAdmin):

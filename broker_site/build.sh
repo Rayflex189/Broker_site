@@ -6,7 +6,7 @@ set -o errexit
 pip install -r requirements.txt
 
 # Make fresh migrations
-python manage.py makemigrations
+python manage.py makemigrations broker_app
 
 # Apply migrations with fake initial if tables already exist
 python manage.py migrate --fake-initial

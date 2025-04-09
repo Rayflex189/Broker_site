@@ -556,7 +556,11 @@ class UserProfile(models.Model):
 
     @property
     def total_balance(self):
-        return self.profit + self.total_amount    
+        return self.profit + self.total_amount 
+
+   def save(self, *args, **kwargs):
+    self.total_balance = self.profit + self.total_amount
+    super().save(*args, **kwargs)
 
     def clean(self):
         super().clean()

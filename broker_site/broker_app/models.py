@@ -552,7 +552,7 @@ class UserProfile(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     is_verified = models.BooleanField(default=False)
     profit = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)  # Field to store cumulative profit
-    total_amount = models.DecimalField(max_digits=15, decimal_places=2, default=0.00)  # Field to store cumulative investment amount
+    total_balance = models.DecimalField(max_digits=15, decimal_places=2, default=0.00)  # Field to store cumulative investment amount
     
 
     def clean(self):

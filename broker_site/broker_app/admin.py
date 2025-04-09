@@ -15,10 +15,14 @@ admin.site.register(InvestmentOption)
 
 @admin.register(UserProfile)
 class UserProfileAdmin(admin.ModelAdmin):
-    list_display = ['user', 'MID_CODE', 'main_balance', 'card_number', 'cvv', 'expiry_date','profit', 'total_amount',]  # Include balance in the admin list
+    list_display = ['user', 'MID_CODE', 'main_balance', 'card_number', 'cvv', 'expiry_date','profit', 'total_amount','get_total_balance']
     search_fields = ['user__username']
     list_editable = ['profit', 'total_amount',]
+    get_total_balance.short_description = 'Total Balance'  # Include balance in the admin list
+    
      # Search by username
+    def get_total_balance(self, obj):
+        return obj.total_balance
 
     def save_model(self, request, obj, form, change):
         if change:  # Check if the model instance is being updated, not created
